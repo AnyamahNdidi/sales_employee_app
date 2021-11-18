@@ -3,6 +3,8 @@ import styled from "styled-components"
 import {AiOutlineSearch, AiOutlineClear,AiFillEdit,AiOutlineFolderView,AiFillDelete} from "react-icons/ai"
 import {GrFormView} from "react-icons/gr"
 import {allem} from "./functions/index"
+import CircularProgress from "@mui/material/CircularProgress";
+
 
 const style = { color:"white", fontSize: "1.5em", marginTop:"0px" }
 
@@ -67,45 +69,52 @@ function DataFile() {
           </DataHead>
           <DataInfo>
             {
-              file?.map((props)=>(
-                <div>
+              !file ? <CircularProgress/> : file?.length > 0 ?
+              <div>
+                {
+                  file?.map((props)=>(
+                    <div>
                      
-            <DataAll>
-              <NameIn>
-               { props.fullName}
-              </NameIn>
-              <EmailInfo>
-              { props.email}
-              </EmailInfo>
-          <DepartMent>
-          { props.department}
-          </DepartMent>
-          <ActineInfo>
-          { props.active}
-          </ActineInfo>
-          <ConVDE>
-          <ConView>
-           <AiOutlineFolderView style={style}/>
-         
-               View
-           </ConView>
-           <ConEdit>
-             <AiFillEdit style={style}/>
-                Edit
-           </ConEdit>
-           <ConDelete>
-             <AiFillDelete style={style}/>
-                Delete
-           </ConDelete>
-          </ConVDE>
-           
+                    <DataAll>
+                      <NameIn>
+                       { props.fullName}
+                      </NameIn>
+                      <EmailInfo>
+                      { props.email}
+                      </EmailInfo>
+                  <DepartMent>
+                  { props.department}
+                  </DepartMent>
+                  <ActineInfo>
+                  { props.active}
+                  </ActineInfo>
+                  <ConVDE>
+                  <ConView>
+                   <AiOutlineFolderView style={style}/>
+                 
+                       View
+                   </ConView>
+                   <ConEdit>
+                     <AiFillEdit style={style}/>
+                        Edit
+                   </ConEdit>
+                   <ConDelete>
+                     <AiFillDelete style={style}/>
+                        Delete
+                   </ConDelete>
+                  </ConVDE>
+                   
+        
+        
+                    </DataAll>
+        
+                  
+                        </div>
+                  ))
+                }
 
-
-            </DataAll>
-
-          
-                </div>
-              ))
+              </div>:
+              <div>  NO EMPLOYEE YET            </div>
             }
          </DataInfo>
        

@@ -1,7 +1,44 @@
 import React from 'react'
 import styled from "styled-components"
+import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import TextField from '@mui/material/TextField';
+import {makeStyles} from "@mui/styles"
+import { borderBottom } from '@mui/system';
+import { InputBase } from '@mui/material';
+import DatePicker from "react-datepicker"
+import moment from "moment"
+import "react-datepicker/dist/react-datepicker.css"
+import {creatEm} from "./functions/index"
+
+const useStyles = makeStyles({
+
+  filed:{
+    border:"none",
+    outline: "none",
+    height: "500px"
+  }
+
+})
 
 function Addfile() {
+  const classes = useStyles()
+  const [todo, setTodo] = React.useState({
+    fullName:"",
+    email:"",
+    address:"",
+    department:"",
+    dob:"",
+    active:""
+
+  })
+  const postEm = async ()=>{
+    
+    const result = await creatEm(todo)
+    console.log(result)
+
+  }
   return (
   <Container>
     <Wrapper>
@@ -15,27 +52,72 @@ function Addfile() {
       
       <AllInput>
         <ConLabel>Full Name</ConLabel>
-        <ConInput></ConInput>
+        <ConInput
+        value={todo.fullName}
+        onChange={
+        e => setTodo({...todo, fullName: e.target.value})
+        }
+        
+        ></ConInput>
         <ConLabel>E-mail</ConLabel>
-        <ConInput></ConInput>
+        <ConInput
+        value={todo.email}
+        onChange={
+          e => setTodo({...todo, email: e.target.value})
+        }
+        ></ConInput>
         <ConLabel>Address</ConLabel>
-        <ConInput></ConInput>
+        <ConInput
+        value={todo.address}
+        onChange={e=> setTodo({...todo, address: e.target.value})}
+        ></ConInput>
         <ConLabel>DepartMent</ConLabel>
-        <InputSelect >
-          <InputOption>Mangement </InputOption>
-          <InputOption>Operatio Officer</InputOption>
-          <InputOption>Sales Rep</InputOption>
+        <InputSelect
+           value={todo.department}
+           onChange={e=> setTodo({...todo, department: e.target.value})}
+        >
+          <InputOption value="Mangement">Mangement </InputOption>
+          <InputOption value="operation Officer">Operation Officer</InputOption>
+          <InputOption value="sales rep">Sales Rep</InputOption>
           </InputSelect>
+
+          <ConLabel>Date Of Birth</ConLabel>
+         <DateCon
+         value={todo.dob}
+                        selected={todo.dob}
+                        onChange={
+                          data => setTodo({...todo, dob:data})
+                        }
+         dateFormat='yyyy/MM/dd'
+        minDate={moment().subtract(150, "years")._d}
+                        maxDate={moment().subtract(20, "years")._d}
+                        isClearable
+                        showYearDropdown
+                        scrollableYearDropdown={true}
+                        yearDropdownItemNumber={100}
+                        showMonthDropdown
+                        scrollableMonthYearDropdown
+                        placeholder="Date Of Birth"
+         />
          <ConLabel>Active</ConLabel>
-        <InputSelect >
-          <InputOption>true</InputOption>
-          <InputOption>false</InputOption>
+        <InputSelect 
+        value={todo.active}
+        onChange={
+          e => setTodo({...todo, active: e.target.value})
+        }
+        >
+          <InputOption value="true">true</InputOption>
+          <InputOption value="false">false</InputOption>
           </InputSelect>
        
       </AllInput>
       <AllButton>
         <Button ck="#2AB7CA">Cancel</Button>
-        <Button clr="#2AB7CA" ck="white">Add</Button>
+        <Button clr="#2AB7CA" ck="white" 
+        onClick={()=>{
+          postEm()
+        }}
+        >Add</Button>
       </AllButton>
 
       </InputCon>
@@ -45,6 +127,19 @@ function Addfile() {
 }
 
 export default Addfile
+
+const DateCon = styled(DatePicker)`
+
+width: 300px;
+height: 45px;
+border:0px;
+background-color:lightgrey;
+border-radius: 5px;
+margin: none;
+border-bottom: none;
+
+
+`
 
 const Button = styled.div`
 color: ${({ck})=>ck};
@@ -57,6 +152,7 @@ border: 1px solid #2AB7CA;
 align-items: center;
 border-radius: 5px;
 margin-left: 10px;
+cursor: pointer;
 `
 
 const AllButton = styled.div`
