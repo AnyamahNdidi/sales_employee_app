@@ -10,3 +10,7 @@ export const allem = async ()=>{
   }
 
 }
+export const creatEm =async (post)=>{
+ const {data} = await api.postEm(post)
+ return data
+}
