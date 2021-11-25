@@ -1,7 +1,5 @@
-import React from 'react'
+import React,{useContext, useEffect} from 'react'
 import styled from "styled-components"
-import DesktopDatePicker from '@mui/lab/DesktopDatePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import TextField from '@mui/material/TextField';
 import {makeStyles} from "@mui/styles"
@@ -10,7 +8,11 @@ import { InputBase } from '@mui/material';
 import DatePicker from "react-datepicker"
 import moment from "moment"
 import "react-datepicker/dist/react-datepicker.css"
-import {creatEm} from "./functions/index"
+import {creatEm,updateEmm} from "./functions/index"
+import {AppContext} from "./Global"
+import { parseISO, format, parse, formatISO } from 'date-fns';
+
+
 
 const useStyles = makeStyles({
 
@@ -24,21 +26,54 @@ const useStyles = makeStyles({
 
 function Addfile() {
   const classes = useStyles()
-  const [todo, setTodo] = React.useState({
-    fullName:"",
-    email:"",
-    address:"",
-    department:"",
-    dob:"",
-    active:""
+  const {todo, setTodo, currentID, setCurentID, changeButton, setChangeButton, file, setFile} = useContext(AppContext)
 
-  })
-  const postEm = async ()=>{
+  const clear = ()=>{
+    setCurentID(0)
+    setTodo({
+      fullName:"",
+      email:"",
+      address:"",
+      department:"",
+      dob:new Date,
+      active:""
+    })
+  }
+ 
+  
+  const postEm = async (e)=>{
+    // e.preventDefault()
     
-    const result = await creatEm(todo)
-    console.log(result)
+    if(currentID === 0){
+      const result = await creatEm(todo)
+      setFile([...file, result])
+      clear()
+    }else{
+      const update = await updateEmm(currentID, todo)
+    
+      clear()
+      
+    }
+    
 
   }
+
+  const dChange =()=>{
+    setChangeButton(!changeButton)
+  }
+
+  useEffect(() => {
+    const clearField = (e) => {
+      if (e.keyCode === 27) {
+        clear()
+      }
+    }
+    window.addEventListener('keydown', clearField)
+    return () => window.removeEventListener('keydown', clearField)
+  }, [])
+
+
+
   return (
   <Container>
     <Wrapper>
@@ -81,12 +116,12 @@ function Addfile() {
           <InputOption value="sales rep">Sales Rep</InputOption>
           </InputSelect>
 
-          <ConLabel>Date Of Birth</ConLabel>
+           <ConLabel>Date Of Birth</ConLabel>
          <DateCon
-         value={todo.dob}
-                        selected={todo.dob}
+                        value={Date.parse(moment(todo.dob, 'yyyy/MM/dd'))}
+                        selected={Date.parse(moment(todo.dob, 'yyyy/MM/dd'))}
                         onChange={
-                          data => setTodo({...todo, dob:data})
+                          data => setTodo({...todo, dob: data})
                         }
          dateFormat='yyyy/MM/dd'
         minDate={moment().subtract(150, "years")._d}
@@ -98,7 +133,7 @@ function Addfile() {
                         showMonthDropdown
                         scrollableMonthYearDropdown
                         placeholder="Date Of Birth"
-         />
+         /> 
          <ConLabel>Active</ConLabel>
         <InputSelect 
         value={todo.active}
@@ -112,12 +147,18 @@ function Addfile() {
        
       </AllInput>
       <AllButton>
-        <Button ck="#2AB7CA">Cancel</Button>
+        <Button ck="#2AB7CA"
+        onClick={()=>{
+          clear()  }}>Clear</Button>
+
         <Button clr="#2AB7CA" ck="white" 
         onClick={()=>{
           postEm()
         }}
-        >Add</Button>
+        >Submt</Button>
+        
+  
+
       </AllButton>
 
       </InputCon>
