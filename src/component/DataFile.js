@@ -1,9 +1,20 @@
-import React from 'react'
+import React,{useContext} from 'react'
 import styled from "styled-components"
 import {AiOutlineSearch, AiOutlineClear,AiFillEdit,AiOutlineFolderView,AiFillDelete} from "react-icons/ai"
 import {GrFormView} from "react-icons/gr"
-import {allem} from "./functions/index"
+import {allem,deleteEm} from "./functions/index"
 import CircularProgress from "@mui/material/CircularProgress";
+import {AppContext} from "./Global"
+
+export interface DatePickerAsControllerProps {
+  control: any;
+  name: string;
+  value: Moment;
+  rules?: any;
+  classes?: string[];
+  label: string;
+  onChange: (date: Moment) => void;
+}
 
 
 const style = { color:"white", fontSize: "1.5em", marginTop:"0px" }
@@ -11,7 +22,9 @@ const style = { color:"white", fontSize: "1.5em", marginTop:"0px" }
 
 
 function DataFile() {
- const [file, setFile] = React.useState(null)
+//  const [file, setFile] = React.useState(null)
+
+ const{todo, setTodo, currentID, setCurentID, file, setFile} = useContext(AppContext)
 
  const getData = async ()=>{
    const result  = await allem()
@@ -21,9 +34,30 @@ function DataFile() {
   console.log(result)
  }
 
+ const deleteSt = async(id)=>{
+   await deleteEm(id)
+   const allstafes = [...file]
+   allstafes.filter(data => data.id !== id)
+   setFile(allstafes)
+ }
+
  React.useEffect(()=>{
    getData()
- },[])
+ },[currentID])
+
+ React.useEffect(()=>{
+   let currentEm = currentID != 0 ? file.find(data => data._id === currentID) : {
+
+    fullName:"",
+    email:"",
+    address:"",
+    department:"",
+    dob:"",
+    active:""
+
+   }
+   setTodo(currentEm)
+ },[currentID])
 
 
   return (
@@ -94,21 +128,28 @@ function DataFile() {
                  
                        View
                    </ConView>
-                   <ConEdit>
+                   <ConEdit
+                  
+                  onClick={()=>{
+                    setCurentID(props._id)
+                    console.log(currentID)
+                  }}
+                   >
                      <AiFillEdit style={style}/>
                         Edit
                    </ConEdit>
-                   <ConDelete>
+                   <ConDelete
+                   onClick={(e)=>{
+                    deleteSt(props._id)
+                  
+                   }}
+                   >
                      <AiFillDelete style={style}/>
                         Delete
                    </ConDelete>
                   </ConVDE>
-                   
-        
-        
                     </DataAll>
         
-                  
                         </div>
                   ))
                 }
