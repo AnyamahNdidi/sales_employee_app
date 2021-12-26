@@ -1,35 +1,87 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import styled from "styled-components"
 import {NavLink} from "react-router-dom"
+import {AppContext} from "./Global"
 
 
 
 function Header() {
+
+  const {current} = useContext(AppContext)
   return (
     <Container>
       <Wrapper>
         <Logo/>
         <Navigation>
             < Nav to=""  activeClassName="active">Home</Nav>
-            < Nav to="/about">About</Nav>
+            < Nav to="/workspace">My workspace</Nav>
             < Nav to="/todo">Todo</Nav>
             < Nav to="/test2">Test2</Nav>
             < Nav to="/test1">Test1</Nav>
+            < Nav to="/personal">Ny project</Nav>
+
         </Navigation>
+        {current && current.uid}
+        <ConLog>
+          <LoginCon to="/register">
+            Login
+          </LoginCon>
+          <SignOut to="">
+            Logout
+          </SignOut>
+        </ConLog>
       </Wrapper>
     </Container>
   )
 }
 
 export default Header
+const ConLog = styled.div`
+display: flex;
+width: 300px;
+display: flex;
+height: 50px;
+justify-content:space-around;
+`
+const LoginCon = styled(NavLink)`
+height:50px;
+width: 100px;
+color: white;
+background-color: grey;
+display: flex;
+justify-content:center;
+align-items: center;
+border-radius: 5px;
+cursor: pointer;
+text-decoration: none;
+
+`
+const SignOut = styled.div`
+height:50px;
+width: 100px;
+color: white;
+background-color: grey;
+display: flex;
+justify-content:center;
+align-items: center;
+border-radius: 5px;
+cursor: pointer;
+`
+
+
 const Logo = styled.div`
 width: 100px;
 height: 60px;
 background-color: white;
-margin-right: 10px;
+margin-right: 400px;
+
 `
 const Navigation = styled.div `
 display: flex;
+width: 500px;
+margin-right: 60px;
+display: flex;
+justify-content: space-around;
 `
 const Nav = styled(NavLink)`
 padding: 15px;
